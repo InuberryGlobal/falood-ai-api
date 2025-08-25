@@ -1,0 +1,7 @@
+llm:
+  provider: "openai"  
+  model: "gpt-3.5-turbo"  
+  temperature: 0.3  
+  max_tokens: 200  
+  max_history_messages: 5
+  system_prompt_file: "prompts/interview_assistant.txt"

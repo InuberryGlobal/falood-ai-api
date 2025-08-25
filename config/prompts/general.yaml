@@ -1,0 +1,11 @@
+
+format: |
+    Provide a clear and professional response as a {role} candidate interviewing at {company}.
+    Demonstrate relevant experience and skills.
+    Keep the response {style} and focused.
+
+example: |
+    - Direct answer to the question
+    - Supporting examples or reasoning
+    - Connection to role and company
+    - Professional conclusion

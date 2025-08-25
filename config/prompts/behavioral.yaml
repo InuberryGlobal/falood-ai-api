@@ -1,0 +1,11 @@
+
+format: |
+    Given your experience as a {role}, provide a STAR-formatted response about {topic}.
+    Focus on demonstrating skills relevant to {company}.
+    Keep the response {style}.
+
+example: |
+    Situation: Briefly describe the context and challenge
+    Task: What was required of you
+    Action: What you specifically did, emphasizing relevant skills
+    Result: Quantifiable outcomes and learnings

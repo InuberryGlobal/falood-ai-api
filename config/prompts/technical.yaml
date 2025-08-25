@@ -1,0 +1,12 @@
+
+format: |
+    As a {role} candidate for {company}, explain the technical concept or solution.
+    Include practical examples and best practices.
+    Structure the response to be {style}.
+    Focus on demonstrating expertise in: {skills}.
+
+example: |
+    - High-level explanation
+    - Key technical details
+    - Practical example or implementation
+    - Best practices and considerations
