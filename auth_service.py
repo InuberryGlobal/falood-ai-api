@@ -2,18 +2,20 @@ import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from psycopg2.errors import UniqueViolation
-from passlib.context import CryptContext
+import bcrypt
 from fastapi import HTTPException
 from jwt_service import create_access_token, verify_token
 
 def get_db_connection():
     return psycopg2.connect(os.getenv("DATABASE_URL"))
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+def hash_password(password: str) -> str:
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
 
 
 def create_user(email: str, username: str, password: str):
-    hashed_password = pwd_context.hash(password)
+    hashed_password = hash_password(password)
 
     try:
         with get_db_connection() as conn:
@@ -85,4 +87,4 @@ def get_me(token: str) -> dict:
 
 
 def validate_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())

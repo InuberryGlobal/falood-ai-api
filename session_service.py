@@ -1,7 +1,6 @@
 import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
-from passlib.context import CryptContext
 from fastapi import HTTPException
 from jwt_service import create_access_token
 
