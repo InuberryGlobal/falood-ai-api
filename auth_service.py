@@ -7,12 +7,7 @@ from fastapi import HTTPException
 from jwt_service import create_access_token, verify_token
 
 def get_db_connection():
-    return psycopg2.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        database=os.getenv("DB_NAME", "falood"),
-        user=os.getenv("DB_USER", "rianulamin.r"),
-        password=os.getenv("DB_PASSWORD", "2486"),
-    )
+    return psycopg2.connect(os.getenv("DATABASE_URL"))
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

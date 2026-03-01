@@ -1,3 +1,4 @@
+import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from passlib.context import CryptContext
@@ -5,13 +6,7 @@ from fastapi import HTTPException
 from jwt_service import create_access_token
 
 def get_db_connection():
-    conn = psycopg2.connect(
-        host="localhost", 
-        database="falood", 
-        user="rianulamin.r", 
-        password="2486"
-    )
-    return conn
+    return psycopg2.connect(os.getenv("DATABASE_URL"))
 
 
 def upsert_session_details(user_id: str, company: str, position: str):

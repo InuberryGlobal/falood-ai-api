@@ -20,20 +20,19 @@ import psycopg2
 from typing import Dict
 from dotenv import load_dotenv
 import os
+import httpx
 
 load_dotenv()
 active_websockets: Dict[str, WebSocket] = {}
 
 def get_db_connection():
-    conn = psycopg2.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        database=os.getenv("DB_NAME", "falood"),
-        user=os.getenv("DB_USER", "rianulamin.r"),
-        password=os.getenv("DB_PASSWORD", "2486")
-    )
-    return conn
+    return psycopg2.connect(os.getenv("DATABASE_URL"))
 
 app = FastAPI()
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
 
 app.add_middleware(
     CORSMiddleware,
@@ -241,5 +240,24 @@ def _session_is_ended(session_id: str) -> bool:
             row = cur.fetchone()
             return bool(row and row[0] is not None)
 
+# --- Self-ping to keep Render free tier alive ---
+RENDER_EXTERNAL_URL = os.getenv("RENDER_EXTERNAL_URL")
+
+@app.on_event("startup")
+async def start_keep_alive():
+    if RENDER_EXTERNAL_URL:
+        asyncio.create_task(_keep_alive())
+
+async def _keep_alive():
+    while True:
+        await asyncio.sleep(14 * 60)  # every 14 minutes
+        try:
+            async with httpx.AsyncClient() as client:
+                await client.get(f"{RENDER_EXTERNAL_URL}/health")
+                print("[KEEP-ALIVE] Pinged self")
+        except Exception as e:
+            print(f"[KEEP-ALIVE] Ping failed: {e}")
+
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=5000, reload=True)
+    port = int(os.getenv("PORT", "5000"))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
